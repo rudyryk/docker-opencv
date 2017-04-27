@@ -3,11 +3,11 @@ FROM alpine:3.5
 ENV LANG=C.UTF-8
 
 # Add Edge repos
-RUN echo "\
-@edgemain http://nl.alpinelinux.org/alpine/edge/main \
-@edgecom http://nl.alpinelinux.org/alpine/edge/community \
-@edgetest http://nl.alpinelinux.org/alpine/edge/testing" \
-  >> /etc/apk/repositories
+RUN echo -e "\n\
+@edgemain http://nl.alpinelinux.org/alpine/edge/main\n\
+@edgecom http://nl.alpinelinux.org/alpine/edge/community\n\
+@edgetest http://nl.alpinelinux.org/alpine/edge/testing"\
+    >> /etc/apk/repositories
 
 RUN apk update && apk upgrade
 
