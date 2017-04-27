@@ -17,6 +17,7 @@ RUN apk update && apk upgrade && apk --no-cache add \
   clang-dev \
   clang \
   cmake \
+  coreutils \
   curl \ 
   freetype-dev \
   ffmpeg-dev \
@@ -42,8 +43,6 @@ RUN apk update && apk upgrade && apk --no-cache add \
   openblas-dev@edgecom \
   openjpeg-dev \
   openssl \
-  postgresql \
-  postgresql-dev \
   python3 \
   python3-dev \
   tiff-dev \
@@ -77,4 +76,9 @@ RUN cd /opt/opencv-3.2.0 && mkdir build && cd build && \
     -D WITH_TBB=ON \
     -D OPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib-3.2.0/modules \
     -D PYTHON_EXECUTABLE=/usr/local/bin/python \
-    ..
+    .. && \
+  make -j$(nproc) && make install
+
+RUN cp -p $(find /usr/local/lib/python3.5/site-packages -name cv2.*.so) \
+   /usr/lib/python3.5/site-packages/cv2.so && \
+   python -c 'import cv2; print("Python: import cv2 - SUCCESS")'
