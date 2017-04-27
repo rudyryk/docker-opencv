@@ -68,6 +68,8 @@ RUN mkdir /opt && cd /opt && \
 
 RUN cd /opt/opencv-3.2.0 && mkdir build && cd build && \
   cmake -D CMAKE_BUILD_TYPE=RELEASE \
+    -D CMAKE_C_COMPILER=/usr/bin/clang
+    -D CMAKE_CXX_COMPILER=/usr/bin/clang++
     -D CMAKE_INSTALL_PREFIX=/usr/local \
     -D INSTALL_PYTHON_EXAMPLES=OFF \
     -D INSTALL_C_EXAMPLES=OFF \
