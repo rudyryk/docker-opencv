@@ -5,9 +5,9 @@ ENV LANG=C.UTF-8
 # Add Edge repos
 RUN echo -e "\n\
 @edgemain http://nl.alpinelinux.org/alpine/edge/main\n\
-@edgecom http://nl.alpinelinux.org/alpine/edge/community\n\
+@edgecomm http://nl.alpinelinux.org/alpine/edge/community\n\
 @edgetest http://nl.alpinelinux.org/alpine/edge/testing"\
-    >> /etc/apk/repositories
+  >> /etc/apk/repositories
 
 # Install required packages
 RUN apk update && apk upgrade && apk --no-cache add \
@@ -39,8 +39,8 @@ RUN apk update && apk upgrade && apk --no-cache add \
   linux-headers \
   make \
   musl \
-  openblas@edgecom \
-  openblas-dev@edgecom \
+  openblas@edgecomm \
+  openblas-dev@edgecomm \
   openjpeg-dev \
   openssl \
   python3 \
@@ -63,9 +63,9 @@ RUN mkdir /opt && cd /opt && \
   wget https://github.com/opencv/opencv/archive/3.2.0.zip && \
   unzip 3.2.0.zip && rm 3.2.0.zip && \
   wget https://github.com/opencv/opencv_contrib/archive/3.2.0.zip && \
-  unzip 3.2.0.zip && rm 3.2.0.zip
-
-RUN cd /opt/opencv-3.2.0 && mkdir build && cd build && \
+  unzip 3.2.0.zip && rm 3.2.0.zip \
+  && \
+  cd /opt/opencv-3.2.0 && mkdir build && cd build && \
   cmake -D CMAKE_BUILD_TYPE=RELEASE \
     -D CMAKE_C_COMPILER=/usr/bin/clang \
     -D CMAKE_CXX_COMPILER=/usr/bin/clang++ \
@@ -76,9 +76,11 @@ RUN cd /opt/opencv-3.2.0 && mkdir build && cd build && \
     -D WITH_TBB=ON \
     -D OPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib-3.2.0/modules \
     -D PYTHON_EXECUTABLE=/usr/local/bin/python \
-    .. && \
-  make -j$(nproc) && make install
-
-RUN cp -p $(find /usr/local/lib/python3.5/site-packages -name cv2.*.so) \
+    .. \
+  && \
+  make -j$(nproc) && make install \
+  && \
+  cp -p $(find /usr/local/lib/python3.5/site-packages -name cv2.*.so) \
    /usr/lib/python3.5/site-packages/cv2.so && \
    python -c 'import cv2; print("Python: import cv2 - SUCCESS")'
+
