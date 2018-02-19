@@ -1,64 +1,41 @@
-FROM alpine:3.5
+FROM python:3.6-alpine3.7
 
-ENV LANG=C.UTF-8
+ENV LANG=en_US.UTF-8 LIBRARY_PATH=/lib:/usr/lib
 
-# Add Edge repos
-RUN echo -e "\n\
-@edgemain http://nl.alpinelinux.org/alpine/edge/main\n\
-@edgecomm http://nl.alpinelinux.org/alpine/edge/community\n\
-@edgetest http://nl.alpinelinux.org/alpine/edge/testing"\
-  >> /etc/apk/repositories
-
-# Install required packages
-RUN apk update && apk upgrade && apk --no-cache add \
+RUN apk --no-cache add \
   bash \
   build-base \
   ca-certificates \
-  clang-dev \
-  clang \
   cmake \
+  clang \
+  clang-dev \
   coreutils \
-  curl \ 
-  freetype-dev \
+  curl \
   ffmpeg-dev \
   ffmpeg-libs \
-  gcc \
-  g++ \
-  git \
+  freetype-dev \
   gettext \
   lcms2-dev \
-  libavc1394-dev \
-  libc-dev \
   libffi-dev \
   libjpeg-turbo-dev \
-  libpng-dev \
-  libressl-dev \
-  libtbb@edgetest \
-  libtbb-dev@edgetest \
   libwebp-dev \
+  libavc1394-dev \
+  libc-dev \
+  libpng-dev \
   linux-headers \
-  make \
   musl \
-  openblas@edgecomm \
-  openblas-dev@edgecomm \
   openjpeg-dev \
   openssl \
-  python3 \
-  python3-dev \
+  openssl-dev \
+  openblas \
+  openblas-dev \
   tiff-dev \
   unzip \
   zlib-dev
 
-# Python 3 as default
-RUN ln -s /usr/bin/python3 /usr/local/bin/python && \
-  ln -s /usr/bin/pip3 /usr/local/bin/pip && \
-  pip install --upgrade pip
-
-# Install NumPy
 RUN ln -s /usr/include/locale.h /usr/include/xlocale.h && \
   pip install numpy
 
-# Install OpenCV
 RUN mkdir /opt && cd /opt && \
   wget https://github.com/opencv/opencv/archive/3.2.0.zip && \
   unzip 3.2.0.zip && rm 3.2.0.zip && \
@@ -73,14 +50,12 @@ RUN mkdir /opt && cd /opt && \
     -D INSTALL_PYTHON_EXAMPLES=OFF \
     -D INSTALL_C_EXAMPLES=OFF \
     -D WITH_FFMPEG=ON \
-    -D WITH_TBB=ON \
     -D OPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib-3.2.0/modules \
     -D PYTHON_EXECUTABLE=/usr/local/bin/python \
-    .. \
-  && \
-  make -j$(nproc) && make install && cd .. && rm -rf build \
-  && \
-  cp -p $(find /usr/local/lib/python3.5/site-packages -name cv2.*.so) \
-   /usr/lib/python3.5/site-packages/cv2.so && \
+    .. && \
+  make -j$(nproc) && make install && cd .. && rm -rf build && \
+  cp -p $(find /usr/local/lib/python3.6/site-packages -name cv2.*.so) \
+   /usr/local/lib/python3.6/site-packages/cv2.so && \
    python -c 'import cv2; print("Python: import cv2 - SUCCESS")'
 
+CMD ["python", "-c", "'import cv2; print(\"Python: import cv2 - SUCCESS\")'"]
