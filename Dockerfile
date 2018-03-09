@@ -14,6 +14,8 @@ RUN mkdir /opt && cd /opt && \
     -D INSTALL_PYTHON_EXAMPLES=OFF \
     -D INSTALL_C_EXAMPLES=OFF \
     -D WITH_FFMPEG=ON \
+    -D BUILD_PERF_TESTS=OFF \
+    -D BUILD_TESTS=OFF \
     -D OPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib-3.2.0/modules \
     -D PYTHON_EXECUTABLE=/usr/local/bin/python \
     .. && \
